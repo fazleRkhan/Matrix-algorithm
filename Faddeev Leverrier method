@@ -1,0 +1,75 @@
+A = [[3,1,5],
+     [3,3,2],
+     [4,6,4]]
+def Zero_mat(rows,cols):
+    Z = []
+    while len(Z) < rows :
+        Z.append([])
+        while len(Z[-1]) < cols:
+            Z[-1].append(0)
+    return Z
+#Trace of a matrix
+def Trace(A):
+    s = 0
+    for i in range(len(A)):
+        s += A[i][i]
+    return s
+def Id_mat(A):
+    n = len(A)
+    I_mat = Zero_mat(n,n)
+    for i in range(n):
+        I_mat[i][i] = (1 * Trace(A))/1
+    return I_mat
+#function for substraction between two matrix
+def mat_sub(A,B): 
+    rows_A = len(A)
+    cols_A = len(A[0])
+    rows_B = len(B)
+    cols_B = len(B[0])
+    if rows_A != rows_B or cols_A != cols_B:       
+        raise exception('Dimensions are not equal !')
+    E = Zero_mat(rows_A,cols_B) 
+    for i in range(rows_A):
+        for j in range(cols_B):
+            E[i][j] = A[i][j] - B[i][j] 
+    return E
+#function for multiplication between two matrix 
+def mult(A,B):
+    rows_A = len(A) 
+    cols_A = len(A[0])
+    rows_B = len(B)
+    cols_B = len(B[0])
+    F = Zero_mat(rows_A,cols_B)
+    for i in range(rows_A):
+        for j in range(cols_B):
+            for k in range(rows_B):
+                F[i][j] += A[i][k]*B[k][j]
+    return F
+tr_3 = 1
+tr_2 = Trace(A)
+I_1 = Id_mat(A)
+
+B = mult(A,mat_sub(A,I_1))
+tr_1 =  -(Trace(B)/2)
+
+def step_1(A):
+    n = len(A)
+    I = Zero_mat(n,n)
+    for i in range(n):
+        I [i][i] = (1 * Trace(B))/2
+    return I
+I_2 = step_1(A)
+C = mult(A,mat_sub(B,I_2))
+tr_0 = -(Trace(C)/3)
+print('c_0 : ',tr_0) #-40
+print('c_1 : ',tr_1) #4
+print('c_2 : ',tr_2) #10
+#So the characteristic polynomial is P(x) = x^3 - 10x^2 + 4x -40
+M = mat_sub(B,I_2)
+r_M = len(M)
+c_M = len(M[0]) 
+A_inverse = Zero_mat(r_M,c_M)
+for i in range(r_M):
+    for j in range(c_M):
+        A_inverse[i][j] = round(M[i][j]*(1/tr_0),3)
+print('A^-1 : ', A_inverse)
